@@ -8,7 +8,23 @@
     rofi
     swaylock-effects
     swww
+    wlogout
+    wdisplays
+    pavucontrol
+    brightnessctl
+    bluez
+    blueman
+    networkmanager
+    networkmanagerapplet
+    power-profiles-daemon
   ];
+
+  # Enable power-profiles-daemon
+  services.power-profiles-daemon.enable = true;
+
+  # Enable bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
   # Waybar
   programs.waybar = {
@@ -18,62 +34,318 @@
         layer = "top";
         position = "top";
         height = 30;
-        modules-left = [ "hyprland/workspaces" "hyprland/window" ];
-        modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "network" "battery" "tray" ];
+        spacing = 4;
         
-        "hyprland/workspaces" = {
-          format = "{name}";
+        modules-left = [
+          "custom/power"
+          "clock"
+          "network"
+          "bluetooth"
+          "pulseaudio#microphone"
+        ];
+        
+        modules-center = [
+          "hyprland/workspaces#left"
+          "custom/power-profile"
+          "hyprland/workspaces#right"
+        ];
+        
+        modules-right = [
+          "battery#bar"
+          "pulseaudio#bar"
+          "backlight#bar"
+        ];
+
+        "custom/power" = {
+          format = "[⏻]";
+          on-click = "wlogout";
+          tooltip = false;
         };
-        
+
         clock = {
-          format = "{:%H:%M}";
-          format-alt = "{:%A, %B %d, %Y (%R)}";
-          tooltip-format = "<tt><small>{calendar}</small></tt>";
+          format = "[{:%H:%M}]";
+          format-alt = "[{:%Y-%m-%d}]";
+          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
-        
-        battery = {
-          format = "{capacity}% {icon}";
-          format-icons = [ "" "" "" "" "" ];
-        };
-        
+
         network = {
-          format-wifi = "{essid} ";
-          format-ethernet = "{ifname} ";
-          format-disconnected = "Disconnected ⚠";
+          format = "[{icon}]";
+          format-wifi = "[󰖩]";
+          format-ethernet = "[󰈀]";
+          format-disconnected = "[󰖪]";
+          tooltip-format = "{ifname}: {ipaddr}/{cidr}";
+          tooltip-format-wifi = "{essid} ({signalStrength}%)";
+          tooltip-format-ethernet = "{ifname}";
+          tooltip-format-disconnected = "Disconnected";
+          on-click = "nm-applet";
         };
-        
-        pulseaudio = {
-          format = "{volume}% {icon}";
-          format-muted = "";
-          format-icons = {
-            default = [ "" "" "" ];
+
+        bluetooth = {
+          format = "[{icon}]";
+          format-connected = "[󰂯]";
+          format-disabled = "[󰂲]";
+          format-off = "[󰂲]";
+          tooltip-format = "{controller_alias}\t{controller_address}";
+          tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
+          tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+          on-click = "blueman-manager";
+        };
+
+        "pulseaudio#microphone" = {
+          format = "[{format_source}]";
+          format-source = "{volume}% 󰍬";
+          format-source-muted = "󰍭";
+          on-click = "pavucontrol -t 4";
+          tooltip = true;
+        };
+
+        "hyprland/workspaces#left" = {
+          format = "[{id}]";
+          on-click = "activate";
+          sort-by-number = true;
+          persistent-workspaces = {
+            "1" = [];
+            "2" = [];
+            "3" = [];
           };
+        };
+
+        "hyprland/workspaces#right" = {
+          format = "[{id}]";
+          on-click = "activate";
+          sort-by-number = true;
+          persistent-workspaces = {
+            "4" = [];
+            "5" = [];
+            "6" = [];
+          };
+        };
+
+        "custom/power-profile" = {
+          exec = "~/.config/waybar/scripts/power-profile.sh";
+          return-type = "json";
+          interval = 5;
+          on-click = "~/.config/waybar/scripts/power-profile-toggle.sh";
+          format = "[{}]";
+        };
+
+        "battery#bar" = {
+          states = {
+            warning = 30;
+            critical = 15;
+          };
+          format = "{capacity}% {icon}";
+          format-charging = "{capacity}% {icon}";
+          format-plugged = "{capacity}% {icon}";
+          format-icons = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
+          tooltip-format = "{timeTo}, {capacity}%";
+        };
+
+        "pulseaudio#bar" = {
+          format = "{volume}% {icon}";
+          format-muted = "MUTE ░░░░░░░░░░";
+          format-icons = {
+            default = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
+          };
+          on-click = "pavucontrol";
+        };
+
+        "backlight#bar" = {
+          format = "{percent}% {icon}";
+          format-icons = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
+          on-scroll-up = "brightnessctl set 5%+";
+          on-scroll-down = "brightnessctl set 5%-";
         };
       };
     };
+    
     style = ''
       * {
-        font-family: JetBrains Mono;
-        font-size: 13px;
+        border: none;
+        border-radius: 0;
+        font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", sans-serif;
+        font-size: 14px;
+        min-height: 0;
       }
-      
+
       window#waybar {
-        background-color: rgba(43, 48, 59, 0.9);
-        border-bottom: 3px solid rgba(100, 114, 125, 0.5);
-        color: #ffffff;
+        background: rgba(30, 30, 46, 0.9);
+        color: #cdd6f4;
       }
-      
+
+      #custom-power,
+      #clock,
+      #network,
+      #bluetooth,
+      #pulseaudio.microphone,
+      #custom-power-profile,
+      #battery.bar,
+      #pulseaudio.bar,
+      #backlight.bar {
+        padding: 0 10px;
+        margin: 2px 4px;
+        background: rgba(49, 50, 68, 0.8);
+        border-radius: 8px;
+      }
+
+      /* Left modules */
+      #custom-power {
+        color: #f38ba8;
+        font-weight: bold;
+      }
+
+      #custom-power:hover {
+        background: rgba(243, 139, 168, 0.2);
+      }
+
+      #clock {
+        color: #89b4fa;
+      }
+
+      #network {
+        color: #a6e3a1;
+      }
+
+      #bluetooth {
+        color: #89dceb;
+      }
+
+      #pulseaudio.microphone {
+        color: #f9e2af;
+      }
+
+      /* Center modules */
+      #workspaces {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+      }
+
       #workspaces button {
-        padding: 0 5px;
-        background-color: transparent;
-        color: #ffffff;
+        padding: 0 8px;
+        margin: 2px 2px;
+        background: rgba(49, 50, 68, 0.5);
+        color: #6c7086;
+        border-radius: 8px;
+        transition: all 0.3s ease;
       }
-      
+
       #workspaces button.active {
-        background-color: #64727D;
+        background: rgba(137, 180, 250, 0.8);
+        color: #1e1e2e;
+        font-weight: bold;
+      }
+
+      #workspaces button:hover {
+        background: rgba(137, 180, 250, 0.4);
+        color: #cdd6f4;
+      }
+
+      #custom-power-profile {
+        color: #cba6f7;
+        min-width: 120px;
+        text-align: center;
+      }
+
+      /* Right modules - bar graphs */
+      #battery.bar,
+      #pulseaudio.bar,
+      #backlight.bar {
+        font-family: monospace;
+        min-width: 150px;
+      }
+
+      #battery.bar {
+        color: #a6e3a1;
+      }
+
+      #battery.bar.warning {
+        color: #f9e2af;
+      }
+
+      #battery.bar.critical {
+        color: #f38ba8;
+        animation: blink 1s linear infinite;
+      }
+
+      #battery.bar.charging {
+        color: #89dceb;
+      }
+
+      #pulseaudio.bar {
+        color: #89b4fa;
+      }
+
+      #backlight.bar {
+        color: #f9e2af;
+      }
+
+      @keyframes blink {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* Tooltips */
+      tooltip {
+        background: rgba(30, 30, 46, 0.95);
+        border: 1px solid rgba(137, 180, 250, 0.5);
+        border-radius: 8px;
+      }
+
+      tooltip label {
+        color: #cdd6f4;
       }
     '';
+  };
+
+  # Create waybar scripts directory and files
+  home.file.".config/waybar/scripts/power-profile.sh" = {
+    text = ''
+      #!/usr/bin/env bash
+      profile=$(powerprofilesctl get)
+
+      case $profile in
+        "power-saver")
+          text="Energy Saving"
+          ;;
+        "balanced")
+          text="Normal"
+          ;;
+        "performance")
+          text="Overdrive"
+          ;;
+        *)
+          text="Unknown"
+          ;;
+      esac
+
+      echo "{\"text\":\"$text\",\"tooltip\":\"Power Profile: $text\",\"class\":\"$profile\"}"
+    '';
+    executable = true;
+  };
+
+  home.file.".config/waybar/scripts/power-profile-toggle.sh" = {
+    text = ''
+      #!/usr/bin/env bash
+      current=$(powerprofilesctl get)
+
+      case $current in
+        "power-saver")
+          powerprofilesctl set balanced
+          ;;
+        "balanced")
+          powerprofilesctl set performance
+          ;;
+        "performance")
+          powerprofilesctl set power-saver
+          ;;
+      esac
+    '';
+    executable = true;
   };
 
   # Mako notification daemon

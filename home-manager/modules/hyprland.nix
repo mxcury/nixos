@@ -15,6 +15,7 @@
         "waybar"
         "mako"
         "nm-applet --indicator"
+        "blueman-applet"
         "swww init"
       ];
       
@@ -131,25 +132,47 @@
         # Lock screen
         "$mod, L, exec, swaylock"
 
-        # Audio mute
+        # Function Keys (ThinkPad T480s)
+        # F1: Audio mute
         ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
         
-        # Microphone mute
+        # F4: Microphone mute
         ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
         
-        # WiFi toggle (F8)
+        # F7: Display toggle
+        ", XF86Display, exec, wdisplays"
+        
+        # F8: WiFi toggle
+        ", XF86WLAN, exec, nmcli radio wifi toggle"
         ", F8, exec, nmcli radio wifi toggle"
         
-        # Bluetooth toggle (F10)
+        # F9: Settings (open system settings)
+        ", XF86Tools, exec, kitty -e nmtui"
+        
+        # F10: Bluetooth toggle
+        ", XF86Bluetooth, exec, bluetoothctl power toggle"
         ", F10, exec, bluetoothctl power toggle"
+        
+        # F11: Keyboard settings (open keyboard layout switcher or settings)
+        ", XF86Keyboard, exec, rofi -show drun -filter keyboard"
+        
+        # F12: Favorites (open file manager or bookmarks)
+        ", XF86Favorites, exec, kitty -e superfile"
       ];
 
-      # Volume controls (repeatable bindings with 100% limit)
+      # Volume and brightness controls (repeatable bindings)
       binde = [
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"
+        # F2: Volume down
         ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
+        
+        # F3: Volume up
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"
+        
+        # F5: Brightness down
         ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+        
+        # F6: Brightness up
+        ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
       ];
       
       # Mouse bindings

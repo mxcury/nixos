@@ -22,8 +22,6 @@
   # Enable power-profiles-daemon
   services.power-profiles-daemon.enable = true;
 
-  # Enable bluetooth
-  services.blueman.enable = true;
 
   # Waybar
   programs.waybar = {

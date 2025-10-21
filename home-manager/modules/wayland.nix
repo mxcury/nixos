@@ -23,7 +23,6 @@
   services.power-profiles-daemon.enable = true;
 
   # Enable bluetooth
-  hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
   # Waybar

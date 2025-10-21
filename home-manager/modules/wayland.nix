@@ -11,12 +11,8 @@
     wlogout
     wdisplays
     pavucontrol
-    brightnessctl
-    bluez
     blueman
-    networkmanager
     networkmanagerapplet
-    power-profiles-daemon
   ];
 
   # Waybar
@@ -237,7 +233,6 @@
       #custom-power-profile {
         color: #cba6f7;
         min-width: 120px;
-        text-align: center;
       }
 
       /* Right modules - bar graphs */
@@ -344,11 +339,11 @@
   # Mako notification daemon
   services.mako = {
     enable = true;
-    settings = {
-      text-color = "#ECEFF4";
-      border-color = "#88C0D0";
-      default-timeout = 5000;
-    };
+    extraConfig = ''
+      text-color=#ECEFF4
+      border-color=#88C0D0
+      default-timeout=5000
+    '';
   };
 
   # Rofi launcher

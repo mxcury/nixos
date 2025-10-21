@@ -19,10 +19,6 @@
     power-profiles-daemon
   ];
 
-  # Enable power-profiles-daemon
-  services.power-profiles-daemon.enable = true;
-
-
   # Waybar
   programs.waybar = {
     enable = true;

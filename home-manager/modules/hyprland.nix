@@ -93,7 +93,7 @@
         "$mod, RETURN, exec, kitty"
         "$mod, SPACE, exec, rofi -show drun"
         "$mod, F, exec, kitty -e superfile"
-	"$mod, E, exec, firefox"
+        "$mod, E, exec, firefox"
         
         # Focus
         "$mod, left, movefocus, l"
@@ -130,6 +130,17 @@
         
         # Lock screen
         "$mod, L, exec, swaylock"
+      ];
+
+      # Volume controls (repeatable bindings)
+      binde = [
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+      ];
+
+      # Volume mute (non-repeatable)
+      bindn = [
+        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
       ];
       
       # Mouse bindings

@@ -7,6 +7,7 @@
     ./modules/terminal.nix
     ./modules/wayland.nix
     ./modules/hyprland.nix
+    ./modules/themes.nix
   ];
 
   home.username = "dev";

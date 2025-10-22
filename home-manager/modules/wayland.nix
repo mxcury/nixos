@@ -12,6 +12,7 @@
     wdisplays
     pavucontrol
     blueman
+    brightnessctl
     networkmanagerapplet
   ];
 
@@ -34,9 +35,8 @@
         ];
         
         modules-center = [
-          "hyprland/workspaces#left"
+          "hyprland/workspaces"
           "custom/power-profile"
-          "hyprland/workspaces#right"
         ];
         
         modules-right = [
@@ -52,16 +52,16 @@
         };
 
         clock = {
-          format = "[{:%H:%M}]";
-          format-alt = "[{:%Y-%m-%d}]";
+          format = "[ {:%H:%M} ]";
+          format-alt = "[ {:%Y-%m-%d} ]";
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
 
         network = {
-          format = "[{icon}]";
-          format-wifi = "[󰖩]";
-          format-ethernet = "[󰈀]";
-          format-disconnected = "[󰖪]";
+          format = "[ {icon} ]";
+          format-wifi = "󰖩";
+          format-ethernet = "󰈀";
+          format-disconnected = "󰖪";
           tooltip-format = "{ifname}: {ipaddr}/{cidr}";
           tooltip-format-wifi = "{essid} ({signalStrength}%)";
           tooltip-format-ethernet = "{ifname}";
@@ -70,10 +70,11 @@
         };
 
         bluetooth = {
-          format = "[{icon}]";
-          format-connected = "[󰂯]";
-          format-disabled = "[󰂲]";
-          format-off = "[󰂲]";
+          format = "[ {icon} ]";
+	  format-on = "󰂯";
+          format-connected = "󰂯";
+          format-disabled = "󰂲";
+          format-off = "󰂲";
           tooltip-format = "{controller_alias}\t{controller_address}";
           tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
           tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
@@ -81,33 +82,18 @@
         };
 
         "pulseaudio#microphone" = {
-          format = "[{format_source}]";
-          format-source = "{volume}% 󰍬";
+          format = "[ {format_source} ]";
+          format-source = "󰍬";
           format-source-muted = "󰍭";
           on-click = "pavucontrol -t 4";
           tooltip = true;
         };
 
-        "hyprland/workspaces#left" = {
-          format = "[{id}]";
+        "hyprland/workspaces" = {
+          format = "{id}";
           on-click = "activate";
           sort-by-number = true;
-          persistent-workspaces = {
-            "1" = [];
-            "2" = [];
-            "3" = [];
-          };
-        };
-
-        "hyprland/workspaces#right" = {
-          format = "[{id}]";
-          on-click = "activate";
-          sort-by-number = true;
-          persistent-workspaces = {
-            "4" = [];
-            "5" = [];
-            "6" = [];
-          };
+          all-outputs = false;
         };
 
         "custom/power-profile" = {
@@ -115,7 +101,7 @@
           return-type = "json";
           interval = 5;
           on-click = "~/.config/waybar/scripts/power-profile-toggle.sh";
-          format = "[{}]";
+          format = "{}";
         };
 
         "battery#bar" = {
@@ -123,16 +109,16 @@
             warning = 30;
             critical = 15;
           };
-          format = "{capacity}% {icon}";
-          format-charging = "{capacity}% {icon}";
-          format-plugged = "{capacity}% {icon}";
+          format = "[{capacity}% {icon}]";
+          format-charging = "{capacity}% 󱐋 {icon}]";
+          format-plugged = "{capacity}%  {icon}";
           format-icons = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
           tooltip-format = "{timeTo}, {capacity}%";
         };
 
         "pulseaudio#bar" = {
-          format = "{volume}% {icon}";
-          format-muted = "MUTE ░░░░░░░░░░";
+          format = "[{volume}% {icon}]";
+          format-muted = "[  ░░░░░░░░░░]";
           format-icons = {
             default = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
           };
@@ -140,7 +126,7 @@
         };
 
         "backlight#bar" = {
-          format = "{percent}% {icon}";
+          format = "{percent}%  {icon}";
           format-icons = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
           on-scroll-up = "brightnessctl set 5%+";
           on-scroll-down = "brightnessctl set 5%-";
@@ -152,16 +138,17 @@
       * {
         border: none;
         border-radius: 0;
-        font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", sans-serif;
+        font-family: "JetBrainsMono Nerd Font";
         font-size: 14px;
         min-height: 0;
       }
 
       window#waybar {
-        background: rgba(30, 30, 46, 0.9);
+        background: #1e1e2e;
         color: #cdd6f4;
       }
 
+      /* Remove individual backgrounds - all modules transparent */
       #custom-power,
       #clock,
       #network,
@@ -172,9 +159,8 @@
       #pulseaudio.bar,
       #backlight.bar {
         padding: 0 10px;
-        margin: 2px 4px;
-        background: rgba(49, 50, 68, 0.8);
-        border-radius: 8px;
+        margin: 0 4px;
+        background: transparent;
       }
 
       /* Left modules */
@@ -212,21 +198,18 @@
 
       #workspaces button {
         padding: 0 8px;
-        margin: 2px 2px;
-        background: rgba(49, 50, 68, 0.5);
+        margin: 0 2px;
+        background: transparent;
         color: #6c7086;
-        border-radius: 8px;
         transition: all 0.3s ease;
       }
 
       #workspaces button.active {
-        background: rgba(137, 180, 250, 0.8);
-        color: #1e1e2e;
+        color: #89b4fa;
         font-weight: bold;
       }
 
       #workspaces button:hover {
-        background: rgba(137, 180, 250, 0.4);
         color: #cdd6f4;
       }
 
@@ -269,11 +252,14 @@
       }
 
       @keyframes blink {
-        0%, 100% {
+        0% {
           opacity: 1;
         }
         50% {
           opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
         }
       }
 

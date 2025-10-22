@@ -9,14 +9,17 @@
     settings = {
       # Monitor configuration
       monitor = ",preferred,auto,1";
-      
+#      windowrulev2 = [
+#        "size 50% 50%, floating:1"
+#      ];
+
       # Execute at launch
       exec-once = [
         "waybar"
         "mako"
         "nm-applet --indicator"
         "blueman-applet"
-        "swww init"
+        "swww-daemon"
       ];
       
       # Input configuration
@@ -34,7 +37,7 @@
         gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
+        "col.active_border" = "rgba(89dcebee)";
         "col.inactive_border" = "rgba(595959aa)";
         layout = "dwindle";
       };
@@ -85,10 +88,10 @@
         # Window management
         "$mod, Q, killactive"
         "$mod, ESCAPE, exit"
-        "$mod, V, togglefloating"
-        "$mod, P, pseudo"
-        "$mod, J, togglesplit"
-        "$mod, F, fullscreen"
+        "$mod SHIFT, V, togglefloating"
+        "$mod SHIFT, P, pseudo"
+        "$mod SHIFT, J, togglesplit"
+        "$mod SHIFT, F, fullscreen"
         
         # Applications
         "$mod, RETURN, exec, kitty"
@@ -125,6 +128,21 @@
         "$mod SHIFT, 8, movetoworkspace, 8"
         "$mod SHIFT, 9, movetoworkspace, 9"
         "$mod SHIFT, 0, movetoworkspace, 10"
+
+	# Workspace switching
+	"SUPER SHIFT, right, exec, ${pkgs.writeShellScript "workspace-cycle-next" ''
+          current=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq '.id')
+          next=$((current + 1))
+          [ $next -gt 6 ] && next=1
+          ${pkgs.hyprland}/bin/hyprctl dispatch workspace $next
+        ''}"
+      
+        "SUPER SHIFT, left, exec, ${pkgs.writeShellScript "workspace-cycle-prev" ''
+          current=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq '.id')
+          next=$((current - 1))
+          [ $next -lt 1 ] && next=6
+          ${pkgs.hyprland}/bin/hyprctl dispatch workspace $next
+        ''}"
         
         # Screenshot
         ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"

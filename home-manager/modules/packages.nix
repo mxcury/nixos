@@ -25,6 +25,7 @@
     docker
     lazygit
     onefetch
+    git
 
     # File management
     superfile

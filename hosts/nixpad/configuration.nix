@@ -5,12 +5,22 @@
     ../../modules/hyprland.nix
     ../../modules/display.nix
     ../../modules/fingerprint.nix
-    ../../modules/firefox.nix
   ];
+
+  # Garbage collection
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.configurationLimit = 5;
+
+  # System name
+  system.configurationName = "nixpad";
 
   # Hostname
   networking.hostName = "nixpad";

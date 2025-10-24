@@ -46,7 +46,8 @@
         ];
 
         "custom/power" = {
-          format = "[⏻]";
+          format = "[ {icon} ]";
+	  icon = "⏻";
           on-click = "wlogout";
           tooltip = false;
         };
@@ -72,8 +73,7 @@
         bluetooth = {
           format = "[ {icon} ]";
 	  format-on = "󰂯";
-          format-connected = "󰂯";
-          format-disabled = "󰂲";
+          format-connected = "󰂱";
           format-off = "󰂲";
           tooltip-format = "{controller_alias}\t{controller_address}";
           tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
@@ -90,10 +90,19 @@
         };
 
         "hyprland/workspaces" = {
-          format = "{id}";
+          format = "[{id}]";
           on-click = "activate";
           sort-by-number = true;
           all-outputs = false;
+	  active-only = false;
+	  persistent-workspaces = {
+	    "1" = [];
+	    "2" = [];
+	    "3" = [];
+	    "4" = [];
+	    "5" = [];
+	    "6" = [];
+	  };
         };
 
         "custom/power-profile" = {

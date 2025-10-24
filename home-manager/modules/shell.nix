@@ -13,7 +13,9 @@
       cat = "bat";
       grep = "rg";
       find = "fd";
-      rebuild = "sudo nixos-rebuild switch --flake $HOME/.config/nixos#nixpad";
+      nix-rebuild = "sudo nixos-rebuild switch --flake $HOME/.config/nixos#nixpad";
+      nix-list = "sudo nix-env --list-generations -p /nix/var/nix/profiles/system";
+      nix-clean = "sudo nix-collect-garbage -d"
     };
 
     initContent = ''

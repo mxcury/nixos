@@ -17,7 +17,7 @@
         "nm-applet --indicator"
         "blueman-applet"
         "swww-daemon"
-	"firefox"
+	"[workspace 10 silent] firefox"
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       ];
       

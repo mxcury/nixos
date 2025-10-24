@@ -9,9 +9,6 @@
     settings = {
       # Monitor configuration
       monitor = ",preferred,auto,1";
-#      windowrulev2 = [
-#        "size 50% 50%, floating:1"
-#      ];
 
       # Execute at launch
       exec-once = [
@@ -20,6 +17,8 @@
         "nm-applet --indicator"
         "blueman-applet"
         "swww-daemon"
+	"firefox"
+        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       ];
       
       # Input configuration
@@ -40,33 +39,48 @@
         "col.active_border" = "rgba(89dcebee)";
         "col.inactive_border" = "rgba(595959aa)";
         layout = "dwindle";
+        # Performance: reduce visual overhead
+        no_border_on_floating = false;
       };
       
-      # Decoration
+      # Decoration - Optimized for performance
       decoration = {
         rounding = 10;
         blur = {
           enabled = true;
           size = 3;
           passes = 1;
+          # Performance improvements
+          new_optimizations = true;
+          xray = false;
+          ignore_opacity = true;
         };
         shadow = {
           enabled = true;
           color = "rgba(00000099)";
+          # Reduce shadow rendering overhead
+          range = 4;
+          render_power = 3;
         };
+        # Disable dim for better performance
+        dim_inactive = false;
       };
 
-      # Animations
+      # Animations - Faster and snappier
       animations = {
         enabled = true;
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+        bezier = [
+          "myBezier, 0.05, 0.9, 0.1, 1.05"
+          "snappy, 0.1, 0.9, 0.1, 1.0"
+        ];
         animation = [
-          "windows, 1, 7, myBezier"
-          "windowsOut, 1, 7, default, popin 80%"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
-          "fade, 1, 7, default"
-          "workspaces, 1, 6, default"
+          # Reduced animation times for snappier feel
+          "windows, 1, 4, snappy, popin 95%"
+          "windowsOut, 1, 4, default, popin 95%"
+          "border, 1, 5, default"
+          "borderangle, 1, 5, default"
+          "fade, 1, 4, default"
+          "workspaces, 1, 3, default, slide"
         ];
       };
       
@@ -74,11 +88,34 @@
       dwindle = {
         pseudotile = true;
         preserve_split = true;
+        # Disable smart splits for faster tiling
+        smart_split = false;
+      };
+      
+      # Misc performance settings
+      misc = {
+        # Disable the anime mascot wallpaper
+        force_default_wallpaper = 0;
+        # Reduce unnecessary redraws
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+        # Performance
+        vfr = true;  # Variable refresh rate
+        vrr = 0;     # Adaptive sync (set to 1 if you have VRR display)
+        # Faster focus switching
+        mouse_move_enables_dpms = true;
+        key_press_enables_dpms = true;
+      };
+      
+      # Render settings for performance
+      render = {
+        # Enable direct scanout for better performance
+        direct_scanout = true;
       };
       
       # Gestures
       gestures = {
-        gesture = "3, horizontal, workspace";
+        gesture = "3, horizontal, workspace"; 
       };
 
       # Key bindings
@@ -129,8 +166,8 @@
         "$mod SHIFT, 9, movetoworkspace, 9"
         "$mod SHIFT, 0, movetoworkspace, 10"
 
-	# Workspace switching
-	"SUPER SHIFT, right, exec, ${pkgs.writeShellScript "workspace-cycle-next" ''
+        # Workspace switching
+        "SUPER SHIFT, right, exec, ${pkgs.writeShellScript "workspace-cycle-next" ''
           current=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq '.id')
           next=$((current + 1))
           [ $next -gt 6 ] && next=1
@@ -197,6 +234,13 @@
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
+      ];
+
+      # Window rules for faster startup
+      windowrulev2 = [
+        # Immediate rendering for common apps
+        "immediate, class:^(kitty)$"
+        "immediate, class:^(firefox)$"
       ];
     };
   };

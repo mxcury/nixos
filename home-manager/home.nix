@@ -9,7 +9,7 @@
     ./modules/hyprland.nix
     ./modules/themes.nix
     ./modules/firefox.nix
-  ];
+];
 
   home.username = "dev";
   home.homeDirectory = "/home/dev";

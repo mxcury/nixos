@@ -5,6 +5,7 @@
     ../../modules/hyprland.nix
     ../../modules/display.nix
     ../../modules/fingerprint.nix
+    ../../modules/firefox.nix
   ];
 
   # Bootloader
@@ -88,7 +89,4 @@
   # Thinkpad 
   services.tlp.enable = true;
   services.fstrim.enable = true;
-
-  # Firefox-fix
-  systemd.services.systemd-timedated.serviceConfig.RuntimeMaxSec = "infinity";
 }

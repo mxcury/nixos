@@ -39,6 +39,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+	    home-manager.backupFileExtension = ".backup";
             home-manager.users.dev = ./home-manager/home.nix;
             home-manager.extraSpecialArgs = {
               inherit inputs;

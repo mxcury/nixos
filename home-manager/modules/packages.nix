@@ -5,9 +5,6 @@
     # Icons and themes
     adwaita-icon-theme
 
-    # Internet explorer
-    firefox
-
     # Webcam
     obs-studio
 

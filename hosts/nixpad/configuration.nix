@@ -88,4 +88,7 @@
   # Thinkpad 
   services.tlp.enable = true;
   services.fstrim.enable = true;
+
+  # Firefox-fix
+  systemd.services.systemd-timedated.serviceConfig.RuntimeMaxSec = "infinity";
 }

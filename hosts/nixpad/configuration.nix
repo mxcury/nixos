@@ -72,6 +72,7 @@
     wget
     git
     usbutils
+    powerprofilesctl
   ];
 
   # User settings

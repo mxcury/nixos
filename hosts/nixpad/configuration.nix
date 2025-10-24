@@ -20,7 +20,7 @@
   boot.loader.grub.configurationLimit = 5;
 
   # System name
-  system.configurationName = "nixpad";
+  system.name = "nixpad";
 
   # Hostname
   networking.hostName = "nixpad";

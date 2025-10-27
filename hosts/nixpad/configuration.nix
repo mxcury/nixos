@@ -72,7 +72,7 @@
     wget
     git
     usbutils
-    powerprofilesctl
+    libnotify
   ];
 
   # User settings
@@ -100,4 +100,13 @@
   # Thinkpad 
   services.tlp.enable = true;
   services.fstrim.enable = true;
+
+  # Sudo permissions for power profiling
+  security.sudo.extraRules = [{
+  users = [ "dev" ];  # Replace with your actual username
+  commands = [{
+    command = "/run/current-system/sw/bin/tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor";
+    options = [ "NOPASSWD" ];
+  }];
+}];
 }

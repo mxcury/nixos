@@ -35,10 +35,11 @@
         ];
         
         modules-center = [
-          "hyprland/workspaces"
-          "custom/power-profile"
+	  "hyprland/workspaces#left"
+	  "custom/power-profile"
+	  "hyprland/workspaces#right"
         ];
-        
+
         modules-right = [
           "battery#bar"
           "pulseaudio#bar"
@@ -46,8 +47,7 @@
         ];
 
         "custom/power" = {
-          format = "[ {icon} ]";
-	  icon = "⏻";
+          format = "[ ⏻ ]";
           on-click = "wlogout";
           tooltip = false;
         };
@@ -59,25 +59,35 @@
         };
 
         network = {
-          format = "[ {icon} ]";
-          format-wifi = "󰖩";
-          format-ethernet = "󰈀";
-          format-disconnected = "󰖪";
+          format = "{icon}";
+	  format-icons = {
+            wifi = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];  # 0-20%, 20-40%, 40-60%, 60-80%, 80-100%
+            ethernet = "󰈀";
+            disconnected = "󰤫";
+            disabled = "󰤮";
+          };
+          format-wifi = "[ {icon} ]";
+          format-ethernet = "[ {icon} ]";
+          format-disconnected = "[ {icon} ]";
+          format-disabled = "[ {icon} ]";
           tooltip-format = "{ifname}: {ipaddr}/{cidr}";
           tooltip-format-wifi = "{essid} ({signalStrength}%)";
           tooltip-format-ethernet = "{ifname}";
           tooltip-format-disconnected = "Disconnected";
+	  tooltip-format-disabled = "Disabled";
           on-click = "nm-applet";
         };
 
         bluetooth = {
-          format = "[ {icon} ]";
-	  format-on = "󰂯";
-          format-connected = "󰂱";
-          format-off = "󰂲";
+          format = "[ 󰂯 ]";
+	  format-on = "[ 󰂯 ]";
+          format-connected = "[ 󰂱 ]";
+          format-off = "[ 󰂲 ]";
+	  format-disabled = "[ 󰂲 ]";
           tooltip-format = "{controller_alias}\t{controller_address}";
           tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
           tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+	  tooltip-format-disabled = "Disabled";
           on-click = "blueman-manager";
         };
 
@@ -89,45 +99,52 @@
           tooltip = true;
         };
 
-        "hyprland/workspaces" = {
-          format = "[{id}]";
-          on-click = "activate";
-          sort-by-number = true;
-          all-outputs = false;
-	  active-only = false;
-	  persistent-workspaces = {
-	    "1" = [];
-	    "2" = [];
-	    "3" = [];
-	    "4" = [];
-	    "5" = [];
-	    "6" = [];
-	  };
-        };
+	"hyprland/workspaces#left" = {
+  on-click = "activate";
+  sort-by-number = true;
+  format = "[{id}]";
+  persistent-workspaces = {
+    "1" = [];
+    "2" = [];
+    "3" = [];
+  };
+  ignore-workspaces = ["[^123]"];  # Regex: ignore anything NOT 1, 2, or 3
+};
 
+"hyprland/workspaces#right" = {
+  on-click = "activate";
+  sort-by-number = true;
+  format = "[{id}]";
+  persistent-workspaces = {
+    "4" = [];
+    "5" = [];
+    "6" = [];
+  };
+  ignore-workspaces = ["[123]"];  # Regex: ignore 1, 2, 3
+};
         "custom/power-profile" = {
-          exec = "~/.config/waybar/scripts/power-profile.sh";
-          return-type = "json";
-          interval = 5;
-          on-click = "~/.config/waybar/scripts/power-profile-toggle.sh";
-          format = "{}";
-        };
+  	  exec = "~/.config/waybar/scripts/power-profile.sh";
+  	  return-type = "json";
+  	  interval = 2;  # Check more frequently for battery changes
+ 	  on-click = "~/.config/waybar/scripts/power-profile-toggle.sh";
+  	  format = "[ {} ]";
+	};
 
         "battery#bar" = {
           states = {
             warning = 30;
             critical = 15;
           };
-          format = "[{capacity}% {icon}]";
-          format-charging = "{capacity}% 󱐋 {icon}]";
-          format-plugged = "{capacity}%  {icon}";
+          format = "{capacity}% [ {icon} ]";
+          format-charging = "{capacity}% 󱐋 [ {icon} ]";
+          format-plugged = "{capacity}%  [ {icon} ]";
           format-icons = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
           tooltip-format = "{timeTo}, {capacity}%";
         };
 
         "pulseaudio#bar" = {
-          format = "[{volume}% {icon}]";
-          format-muted = "[  ░░░░░░░░░░]";
+          format = "{volume}% [ {icon} ]";
+          format-muted = "  [ ░░░░░░░░░░ ]";
           format-icons = {
             default = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
           };
@@ -135,7 +152,7 @@
         };
 
         "backlight#bar" = {
-          format = "{percent}%  {icon}";
+          format = "{percent}%  [ {icon} ]";
           format-icons = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
           on-scroll-up = "brightnessctl set 5%+";
           on-scroll-down = "brightnessctl set 5%-";
@@ -147,7 +164,7 @@
       * {
         border: none;
         border-radius: 0;
-        font-family: "JetBrainsMono Nerd Font";
+        font-family: "JetBrainsMono Nerd Font Propo";
         font-size: 14px;
         min-height: 0;
       }
@@ -289,24 +306,61 @@
   home.file.".config/waybar/scripts/power-profile.sh" = {
     text = ''
       #!/usr/bin/env bash
-      profile=$(powerprofilesctl get)
 
-      case $profile in
-        "power-saver")
-          text="Energy Saving"
-          ;;
-        "balanced")
-          text="Normal"
-          ;;
-        "performance")
-          text="Overdrive"
-          ;;
-        *)
-          text="Unknown"
-          ;;
-      esac
+      STATE_FILE="$HOME/.cache/power-profile-state"
+      BATTERY_PATH="/sys/class/power_supply/BAT0"
 
-      echo "{\"text\":\"$text\",\"tooltip\":\"Power Profile: $text\",\"class\":\"$profile\"}"
+      # Get current battery percentage
+      if [ -f "$BATTERY_PATH/capacity" ]; then
+        battery=$(cat "$BATTERY_PATH/capacity")
+      else
+        battery=100
+      fi
+  
+      # Get current governor
+      governor=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || echo "unknown")
+  
+      # Read user preference
+      if [ -f "$STATE_FILE" ]; then
+        user_pref=$(cat "$STATE_FILE")
+      else
+        user_pref="balanced"
+        echo "balanced" > "$STATE_FILE"
+      fi
+  
+      # Determine actual mode based on battery
+      if [ "$battery" -lt 20 ]; then
+        mode="power-saver"
+        text="Energy Saving"
+        target_gov="powersave"
+      elif [ "$battery" -lt 80 ]; then
+        mode="balanced"
+        text="Normal"
+        target_gov="powersave"
+      else
+        mode="$user_pref"
+        case $mode in
+          "power-saver")
+            text="Energy Saving"
+            target_gov="powersave"
+            ;;
+          "balanced")
+            text="Normal"
+            target_gov="powersave"
+            ;;
+          "performance")
+            text="Overdrive"
+            target_gov="performance"
+            ;;
+        esac
+      fi
+  
+      # Apply governor if different
+      if [ "$governor" != "$target_gov" ] && [ "$target_gov" != "unknown" ]; then
+        echo "$target_gov" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1
+      fi
+  
+      echo "{\"text\":\"$text\",\"tooltip\":\"Power: $text (Battery: $battery%)\",\"class\":\"$mode\"}"
     '';
     executable = true;
   };
@@ -314,19 +368,64 @@
   home.file.".config/waybar/scripts/power-profile-toggle.sh" = {
     text = ''
       #!/usr/bin/env bash
-      current=$(powerprofilesctl get)
-
+  
+      STATE_FILE="$HOME/.cache/power-profile-state"
+      BATTERY_PATH="/sys/class/power_supply/BAT0"
+  
+      # Get current battery percentage
+      if [ -f "$BATTERY_PATH/capacity" ]; then
+        battery=$(cat "$BATTERY_PATH/capacity")
+      else
+        battery=100
+      fi
+  
+      # Read current preference
+      if [ -f "$STATE_FILE" ]; then
+        current=$(cat "$STATE_FILE")
+      else
+        current="balanced"
+      fi
+  
+      # Cycle through modes
       case $current in
         "power-saver")
-          powerprofilesctl set balanced
+          next="balanced"
           ;;
         "balanced")
-          powerprofilesctl set performance
+          next="performance"
           ;;
         "performance")
-          powerprofilesctl set power-saver
+          next="power-saver"
+          ;;
+        *)
+          next="balanced"
           ;;
       esac
+  
+      # Save preference
+      echo "$next" > "$STATE_FILE"
+  
+      # Apply immediately if battery allows
+      if [ "$battery" -lt 20 ]; then
+        notify-send "Power Profile" "Preference: $next → Using Energy Saving (battery <20%)"
+      elif [ "$battery" -lt 80 ]; then
+        notify-send "Power Profile" "Preference: $next → Using Normal (battery <80%)"
+      else
+        case $next in
+          "power-saver")
+            echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
+            notify-send "Power Profile" "Energy Saving"
+            ;;
+          "balanced")
+            echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
+            notify-send "Power Profile" "Normal"
+            ;;
+          "performance")
+            echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
+            notify-send "Power Profile" "Overdrive"
+            ;;
+        esac
+      fi
     '';
     executable = true;
   };

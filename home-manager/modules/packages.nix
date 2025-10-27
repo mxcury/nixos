@@ -23,6 +23,7 @@
     lazygit
     onefetch
     git
+    jq
 
     # File management
     superfile

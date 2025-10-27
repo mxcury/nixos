@@ -17,7 +17,7 @@
         "nm-applet --indicator"
         "blueman-applet"
         "swww-daemon"
-	"[workspace 10 silent] firefox"
+	"[workspace special:hidden silent] firefox"
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       ];
       
@@ -113,9 +113,8 @@
         direct_scanout = true;
       };
       
-      # Gestures
       gestures = {
-        gesture = "3, horizontal, workspace"; 
+        gesture = "3, horizontal, workspace";
       };
 
       # Key bindings
@@ -167,18 +166,33 @@
         "$mod SHIFT, 0, movetoworkspace, 10"
 
         # Workspace switching
-        "SUPER SHIFT, right, exec, ${pkgs.writeShellScript "workspace-cycle-next" ''
+        "$mod SHIFT, right, exec, ${pkgs.writeShellScript "workspace-cycle-next" ''
           current=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq '.id')
           next=$((current + 1))
           [ $next -gt 6 ] && next=1
           ${pkgs.hyprland}/bin/hyprctl dispatch workspace $next
         ''}"
       
-        "SUPER SHIFT, left, exec, ${pkgs.writeShellScript "workspace-cycle-prev" ''
+        "$mod SHIFT, left, exec, ${pkgs.writeShellScript "workspace-cycle-prev" ''
           current=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq '.id')
           next=$((current - 1))
           [ $next -lt 1 ] && next=6
           ${pkgs.hyprland}/bin/hyprctl dispatch workspace $next
+        ''}"
+
+	# Move window to next/previous workspace (with looping)
+        "$mod SHIFT CTRL, right, exec, ${pkgs.writeShellScript "movewindow-cycle-next" ''
+          current=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq '.id')
+          next=$((current + 1))
+          [ $next -gt 6 ] && next=1
+          ${pkgs.hyprland}/bin/hyprctl dispatch movetoworkspace $next
+        ''}"
+
+        "$mod SHIFT CTRL, left, exec, ${pkgs.writeShellScript "movewindow-cycle-prev" ''
+          current=$(${pkgs.hyprland}/bin/hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq '.id')
+          next=$((current - 1))
+          [ $next -lt 1 ] && next=6
+          ${pkgs.hyprland}/bin/hyprctl dispatch movetoworkspace $next
         ''}"
         
         # Screenshot

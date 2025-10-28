@@ -100,28 +100,29 @@
         };
 
 	"hyprland/workspaces#left" = {
-  on-click = "activate";
-  sort-by-number = true;
-  format = "[{id}]";
-  persistent-workspaces = {
-    "1" = [];
-    "2" = [];
-    "3" = [];
-  };
-  ignore-workspaces = ["[^123]"];  # Regex: ignore anything NOT 1, 2, or 3
-};
+  	  on-click = "activate";
+  	  sort-by-number = true;
+  	  format = "[{id}]";
+  	  persistent-workspaces = {
+    	    "1" = [];
+    	    "2" = [];
+    	    "3" = [];
+  	  };
+  	  ignore-workspaces = ["[^123]"];  # Regex: ignore anything NOT 1, 2, or 3
+	};
 
-"hyprland/workspaces#right" = {
-  on-click = "activate";
-  sort-by-number = true;
-  format = "[{id}]";
-  persistent-workspaces = {
-    "4" = [];
-    "5" = [];
-    "6" = [];
-  };
-  ignore-workspaces = ["[123]"];  # Regex: ignore 1, 2, 3
-};
+	"hyprland/workspaces#right" = {
+  	  on-click = "activate";
+  	  sort-by-number = true;
+  	  format = "[{id}]";
+  	  persistent-workspaces = {
+    	    "4" = [];
+    	    "5" = [];
+    	    "6" = [];
+  	  };
+  	  ignore-workspaces = ["[123]"];  # Regex: ignore 1, 2, 3
+	};
+
         "custom/power-profile" = {
   	  exec = "~/.config/waybar/scripts/power-profile.sh";
   	  return-type = "json";

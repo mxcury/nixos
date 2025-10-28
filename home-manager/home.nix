@@ -5,10 +5,15 @@
     ./modules/packages.nix
     ./modules/shell.nix
     ./modules/terminal.nix
-    ./modules/wayland.nix
+    ./modules/neovim.nix
     ./modules/hyprland.nix
-    ./modules/themes.nix
     ./modules/firefox.nix
+    ./modules/sddm.nix
+    ./modules/wayland/waybar.nix
+    ./modules/wayland/rofi.nix
+    ./modules/wayland/mako.nix
+    ./modules/wayland/swaylock.nix
+    ./modules/wayland/wlogout.nix
 ];
 
   home.username = "dev";

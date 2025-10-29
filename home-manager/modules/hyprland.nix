@@ -128,6 +128,7 @@
         "$mod SHIFT, P, pseudo"
         "$mod SHIFT, J, togglesplit"
         "$mod SHIFT, F, fullscreen"
+	"$mod SHIFT, S, togglespecialworkspace"
         
         # Applications
         "$mod, RETURN, exec, kitty"

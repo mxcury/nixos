@@ -9,11 +9,7 @@
     ./modules/hyprland.nix
     ./modules/firefox.nix
     ./modules/sddm.nix
-    ./modules/wayland/waybar.nix
-    ./modules/wayland/rofi.nix
-    ./modules/wayland/mako.nix
-    ./modules/wayland/swaylock.nix
-    ./modules/wayland/wlogout.nix
+    ./modules/wayland.nix
 ];
 
   home.username = "dev";

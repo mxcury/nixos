@@ -2,8 +2,7 @@
 
 {
   imports = [
-    ./scripts/power-profile.nix
-    ./scripts/power-profile-toggle.nix
+    ./scripts/power-profiles/power-profiles.nix
     ./styling/waybar.nix
   ];
 

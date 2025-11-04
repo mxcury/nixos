@@ -18,6 +18,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.configurationLimit = 5;
+  boot.kernelParams = [ "mem_sleep_default=s2idle" ];
 
   # System name
   system.name = "nixpad";

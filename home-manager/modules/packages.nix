@@ -8,9 +8,6 @@
     # Webcam
     obs-studio
 
-    # Bluetooth
-    bluetuith
-
     # Editors
     neovim
     obsidian
@@ -59,7 +56,5 @@
     slurp
     wl-clipboard
 
-    # Network
-    networkmanagerapplet
   ];
 }

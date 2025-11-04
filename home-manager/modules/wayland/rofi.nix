@@ -1,124 +1,180 @@
-
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./scripts/rofi/launchers.nix
+  ];
+
   programs.rofi = {
     enable = true;
+    package = pkgs.rofi-wayland;
     font = "JetBrainsMono Nerd Font Propo 12";
 
     extraConfig = {
-      modi = "  drun,   run,   window";
-      show-icons = false;
-      show-mode = true;
-      lines = 10;
-      columns = 1;
+      modi = "drun,run,window";
+      show-icons = true;
+      icon-theme = "Papirus-Dark";
+      drun-display-format = "{name}";
+      window-format = "{w} · {c} · {t}";
+      display-drun = "  Apps";
+      display-run = "  Run";
+      display-window = "  Windows";
       terminal = "kitty";
       matching = "fuzzy";
-      prompt = "  Run  ";
     };
 
     theme = ''
       * {
         font: "JetBrainsMono Nerd Font Propo 12";
-        border: 1px;
-        border-radius: 0;
-        padding: 4px;
-        spacing: 2;
-        background-color: @base;
-        foreground: @text;
-        selected-background: @accent;
-        selected-foreground: @base;
+        
+        /* Catppuccin Mocha palette */
+        base:      #1e1e2e;
+        mantle:    #181825;
+        crust:     #11111b;
+        text:      #cdd6f4;
+        subtext0:  #a6adc8;
+        subtext1:  #bac2de;
+        overlay0:  #6c7086;
+        overlay1:  #7f849c;
+        surface0:  #313244;
+        surface1:  #45475a;
+        surface2:  #585b70;
+        accent:    #89b4fa;
+        blue:      #89b4fa;
+        green:     #a6e3a1;
+        yellow:    #f9e2af;
+        red:       #f38ba8;
+        
+        background-color: transparent;
+        text-color: @text;
       }
 
-      /* === Catppuccin Mocha palette === */
-      @define-color base      #1e1e2e;
-      @define-color mantle    #181825;
-      @define-color crust     #11111b;
-      @define-color text      #cdd6f4;
-      @define-color subtext0  #a6adc8;
-      @define-color overlay0  #6c7086;
-      @define-color surface0  #313244;
-      @define-color surface1  #45475a;
-      @define-color surface2  #585b70;
-      @define-color accent    #89b4fa;
-
       window {
-        border: 2px;
+        location: center;
+        width: 600px;
+        border: 2px solid;
         border-color: @accent;
-        padding: 8px;
         background-color: @base;
+        padding: 12px;
       }
 
       mainbox {
-        border: 1px dashed @surface1;
-        padding: 6px;
-        spacing: 6px;
+        border: 1px dashed;
+        border-color: @surface1;
+        padding: 8px;
+        spacing: 8px;
+        children: [inputbar, message, listview, mode-switcher];
       }
 
       inputbar {
-        border: 1px solid @surface2;
-        padding: 4px;
+        border: 1px solid;
+        border-color: @surface2;
+        padding: 6px;
         background-color: @mantle;
-        text-color: @text;
+        spacing: 8px;
+        children: [prompt, entry];
       }
 
       prompt {
         text-color: @accent;
         background-color: @mantle;
-        margin: 0 6px 0 0;
       }
 
       entry {
+        placeholder: "Type to search...";
+        placeholder-color: @overlay0;
         background-color: @mantle;
         text-color: @text;
-        placeholder: "Type to search…";
       }
 
       listview {
-        scrollbar: false;
+        border: 1px solid;
+        border-color: @surface1;
+        padding: 4px;
+        lines: 10;
+        columns: 1;
         fixed-height: false;
-        border: 1px solid @surface1;
+        scrollbar: false;
       }
 
       element {
-        padding: 2px 4px;
-        background-color: transparent;
+        padding: 6px 8px;
+        spacing: 8px;
+        border: 1px solid transparent;
+      }
+
+      element normal.normal {
+        background-color: @base;
         text-color: @subtext0;
       }
 
-      element selected {
-        background-color: @accent;
-        text-color: @base;
+      element normal.active {
+        background-color: @base;
+        text-color: @accent;
       }
 
-      element alternate {
+      element alternate.normal {
         background-color: @surface0;
+        text-color: @subtext0;
+      }
+
+      element alternate.active {
+        background-color: @surface0;
+        text-color: @accent;
+      }
+
+      element selected.normal {
+        background-color: @accent;
+        text-color: @base;
+        border-color: @accent;
+      }
+
+      element selected.active {
+        background-color: @accent;
+        text-color: @base;
+        border-color: @accent;
+      }
+
+      element-icon {
+        size: 1.2em;
+        vertical-align: 0.5;
+      }
+
+      element-text {
+        vertical-align: 0.5;
       }
 
       message {
-        border: 1px solid @surface1;
-        padding: 4px;
-        text-color: @overlay0;
+        border: 1px solid;
+        border-color: @surface1;
+        padding: 6px;
+        background-color: @mantle;
+      }
+
+      textbox {
+        text-color: @text;
       }
 
       mode-switcher {
-        border: 1px solid @surface1;
+        border: 1px solid;
+        border-color: @surface1;
         background-color: @mantle;
-        text-color: @subtext0;
-        padding: 2px;
+        padding: 4px;
         spacing: 8px;
-        border-radius: 0;
-        horizontal-align: 0.5;
       }
 
       button {
+        padding: 4px 8px;
         border: 1px solid transparent;
-        padding: 2px 4px;
+        background-color: @mantle;
+        text-color: @subtext0;
       }
 
       button selected {
-        border: 1px dashed @accent;
+        border: 1px dashed;
+        border-color: @accent;
         text-color: @accent;
+        background-color: @surface0;
       }
     '';
   };

@@ -133,6 +133,7 @@
         # Applications
         "$mod, RETURN, exec, kitty"
         "$mod, SPACE, exec, rofi -show drun"
+	"$mod, W, exec, ~/.config/rofi/launchers/wallpaper.sh"
         "$mod, F, exec, kitty -e superfile"
         "$mod, E, exec, firefox"
         
@@ -249,6 +250,11 @@
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
+      ];
+
+      # Laptop bindings
+      bindl = [
+        ", switch:on:Lid Switch, exec, swaylock & sleep 1 && systemctl suspend"
       ];
 
       # Window rules for faster startup

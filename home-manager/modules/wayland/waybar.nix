@@ -64,7 +64,7 @@
           tooltip-format-ethernet = "{ifname}";
           tooltip-format-disconnected = "Disconnected";
           tooltip-format-disabled = "Disabled";
-          on-click = "nm-applet";
+          on-click = "~/.config/rofi/launchers/wifi.sh";
         };
 
         bluetooth = {
@@ -77,14 +77,14 @@
           tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
           tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
           tooltip-format-disabled = "Disabled";
-          on-click = "blueman-manager";
+          on-click = "~/.config/rofi/launchers/bluetooth.sh";
         };
 
         "pulseaudio#microphone" = {
           format = "[ {format_source} ]";
           format-source = "󰍬";
           format-source-muted = "󰍭";
-          on-click = "pavucontrol -t 4";
+          on-click = "~/.config/rofi/launchers/microphone.sh";
           tooltip = true;
         };
 
@@ -116,7 +116,7 @@
           exec = "~/.config/waybar/scripts/power-profile.sh";
           return-type = "json";
           interval = 2;
-          on-click = "~/.config/waybar/scripts/power-profile-toggle.sh";
+          on-click = "~/.config/rofi/launchers/power-profile.sh";
           format = "[ {} ]";
         };
 
@@ -138,12 +138,13 @@
           format-icons = {
             default = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
           };
-          on-click = "pavucontrol";
+          on-click = "~/.config/rofi/launchers/volume.sh";
         };
 
         "backlight#bar" = {
           format = "{percent}%  [ {icon} ]";
           format-icons = ["░░░░░░░░░░" "█░░░░░░░░░" "██░░░░░░░░" "███░░░░░░░" "████░░░░░░" "█████░░░░░" "██████░░░░" "███████░░░" "████████░░" "█████████░" "██████████"];
+          on-click = "~/.config/rofi/launchers/brightness.sh";
           on-scroll-up = "brightnessctl set 5%+";
           on-scroll-down = "brightnessctl set 5%-";
         };

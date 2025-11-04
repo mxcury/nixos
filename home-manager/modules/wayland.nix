@@ -21,6 +21,6 @@
     pavucontrol
     blueman
     brightnessctl
-    networkmanagerapplet
+    hyprsunset
   ];
 }
